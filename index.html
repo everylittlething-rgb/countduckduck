@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>計數鴨 - 郵差派遞加班時數計算工具</title>
+    <title>計數鴨 - 郵差派遞加班時數計算器</title>
     <style>
         :root {
             --primary-dark: #1b264f;
@@ -13,6 +13,8 @@
             --card-bg: #ffffff;
             --text-color: #333333;
             --border-color: #cccccc;
+            --accent-color: #e67e22;
+            --success-color: #009865;
         }
 
         * {
@@ -31,16 +33,40 @@
         }
 
         header {
-            text-align: center;
-            padding: 15px 0;
+            padding: 15px;
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue));
             color: white;
             border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header-duck-img {
+            height: 90px;
+            width: auto;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 15px;
+            filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .header-content .text-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
         }
 
@@ -90,19 +116,6 @@
             display: block;
         }
 
-        .warning-box {
-            border: 3px solid #c0392b;
-            background-color: #fdf2f2;
-            color: #000000;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
         .form-group {
             margin-bottom: 15px;
         }
@@ -132,6 +145,7 @@
         .checkbox-label {
             display: inline-flex;
             align-items: center;
+            font-weight: normal;
             cursor: pointer;
             color: #c0392b;
             font-weight: bold;
@@ -211,7 +225,6 @@
             color: white;
             font-size: 1.1rem;
         }
-
         .btn-calc:hover {
             background: #007a51;
         }
@@ -320,8 +333,13 @@
 <body>
 
 <header>
-    <h1>🦆 計數鴨</h1>
-    <p>郵差派遞加班時數計算工具</p>
+    <div class="header-content">
+        <img src="duck.jpg" alt="計數鴨卡通郵差" class="header-duck-img" onerror="this.style.display='none'">
+        <div class="text-group">
+            <h1>計數鴨</h1>
+            <p>郵差派遞加班時數計算工具</p>
+        </div>
+    </div>
 </header>
 
 <div class="nav-tabs">
@@ -333,12 +351,8 @@
 
 <!-- ================= 頁面 1: 加班計算 ================= -->
 <div id="calcTab" class="tab-content active">
-    <div class="warning-box">
-        此計算結果只供參考，如與幫辦報數出現誤差，應已幫辦為準
-    </div>
-
     <div class="route-selector">
-        <label for="selectRoute">選擇派遞路線：</label>
+        <label for="selectRoute">選擇派遞路線（最多 25 條/段）：</label>
         <select id="selectRoute" onchange="onSelectRouteChanged()">
             <option value="">-- 請選擇已建立的路線 --</option>
         </select>
@@ -363,10 +377,6 @@
                 <div class="form-group"><label>手料實際數量</label><input type="number" id="actHand" value="0" min="0"></div>
                 <div class="form-group"><label>薄雞實際數量</label><input type="number" id="actThin" value="0" min="0"></div>
             </div>
-            <div class="form-group">
-                <label>退件實際數量 <span style="font-size:0.8rem; color:#666; font-weight:normal;">(系統會自動 ÷ 3 計算)</span></label>
-                <input type="number" id="actReturn" value="0" min="0">
-            </div>
         </section>
 
         <!-- 第 2 部份 -->
@@ -389,7 +399,7 @@
 
         <!-- 第 4 部份 -->
         <section>
-            <h3>第 4 部份：可追查郵件 (掛號郵件)</h3>
+            <h3>第 4 部份：可追查郵件</h3>
             <div class="form-group">
                 <label>可追查郵件實際數量 (每件 2.5 分鐘)</label>
                 <input type="number" id="actTrackable" value="0" min="0">
@@ -400,16 +410,16 @@
         <section>
             <h3>第 5 部份：郵政通函 (10 款廣告實際數量)</h3>
             <div class="grid-4">
-                <div class="form-group"><label>第 1 款</label><input type="number" id="actC1" value="0" min="0"></div>
-                <div class="form-group"><label>第 2 款</label><input type="number" id="actC2" value="0" min="0"></div>
-                <div class="form-group"><label>第 3 款</label><input type="number" id="actC3" value="0" min="0"></div>
-                <div class="form-group"><label>第 4 款</label><input type="number" id="actC4" value="0" min="0"></div>
-                <div class="form-group"><label>第 5 款</label><input type="number" id="actC5" value="0" min="0"></div>
-                <div class="form-group"><label>第 6 款</label><input type="number" id="actC6" value="0" min="0"></div>
-                <div class="form-group"><label>第 7 款</label><input type="number" id="actC7" value="0" min="0"></div>
-                <div class="form-group"><label>第 8 款</label><input type="number" id="actC8" value="0" min="0"></div>
-                <div class="form-group"><label>第 9 款</label><input type="number" id="actC9" value="0" min="0"></div>
-                <div class="form-group"><label>第 10 款</label><input type="number" id="actC10" value="0" min="0"></div>
+                <div class="form-group"><label>第 1 款</label><input type="number" id="actC1" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 2 款</label><input type="number" id="actC2" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 3 款</label><input type="number" id="actC3" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 4 款</label><input type="number" id="actC4" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 5 款</label><input type="number" id="actC5" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 6 款</label><input type="number" id="actC6" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 7 款</label><input type="number" id="actC7" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 8 款</label><input type="number" id="actC8" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 9 款</label><input type="number" id="actC9" value="0" min="0" class="act-c"></div>
+                <div class="form-group"><label>第 10 款</label><input type="number" id="actC10" value="0" min="0" class="act-c"></div>
             </div>
         </section>
 
@@ -429,7 +439,7 @@
     </form>
 
     <div id="resultBox" class="result-box" style="display:none;">
-        <div class="result-title">最終派遞時間</div>
+        <div class="result-title">預計所需加班時間</div>
         <div class="result-value" id="totalOTMin">0 分鐘</div>
         <div class="result-sub" id="totalOTHr">(約 0 小時 0 分鐘)</div>
 
@@ -441,12 +451,8 @@
 <!-- ================= 頁面 2: 建立路線 ================= -->
 <div id="routeTab" class="tab-content">
     <div class="form-group">
-        <label for="routeSlot">選擇儲存位置（最多 3 條路線）：</label>
-        <select id="routeSlot" onchange="loadRouteToForm()">
-            <option value="1">路線 1</option>
-            <option value="2">路線 2</option>
-            <option value="3">路線 3</option>
-        </select>
+        <label for="routeSlot">選擇儲存位置（最多 25 條/段路線）：</label>
+        <select id="routeSlot" onchange="loadRouteToForm()"></select>
     </div>
 
     <div class="form-group">
@@ -518,7 +524,7 @@
     <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">在此輸入各款廣告的派遞比率與實際數量，系統將自動計算所需分鐘及總計。</p>
     
     <div class="table-responsive">
-        <table class="circular-table">
+        <table class="circular-table" id="circularMatrixTable">
             <thead>
                 <tr>
                     <th style="width: 15%;">項目 / 行</th>
@@ -608,13 +614,24 @@
 </div>
 
 <script>
-    let routes = JSON.parse(localStorage.getItem('postal_routes_duck')) || {
-        1: null,
-        2: null,
-        3: null
-    };
+    // 最多可儲存 25 條/段路線
+    const MAX_ROUTES = 25;
+
+    function createDefaultRoutes() {
+        const obj = {};
+        for (let i = 1; i <= MAX_ROUTES; i++) {
+            obj[i] = null;
+        }
+        return obj;
+    }
+
+    let routes = Object.assign(
+        createDefaultRoutes(),
+        JSON.parse(localStorage.getItem('postal_routes_duck_25') || localStorage.getItem('postal_routes_duck') || '{}')
+    );
 
     window.onload = function() {
+        initRouteSlotDropdown();
         initRouteDropdowns();
         loadRouteToForm();
         updateCircularTable();
@@ -629,25 +646,45 @@
             evt.currentTarget.classList.add('active');
         }
 
-        if(tabId === 'calcTab') {
+        if (tabId === 'calcTab') {
             initRouteDropdowns();
+        } else if (tabId === 'routeTab') {
+            initRouteSlotDropdown();
+            loadRouteToForm();
         }
     }
 
+    // 動態產生「建立路線」的 1~25 選項
+    function initRouteSlotDropdown() {
+        const slotSelect = document.getElementById('routeSlot');
+        const prevVal = slotSelect.value || '1';
+        slotSelect.innerHTML = '';
+
+        for (let i = 1; i <= MAX_ROUTES; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            const r = routes[i];
+            opt.textContent = r && r.name ? `路線/段 ${i} (${r.name})` : `路線/段 ${i}`;
+            slotSelect.appendChild(opt);
+        }
+        slotSelect.value = prevVal;
+    }
+
+    // 動態產生「加班計算」的 1~25 路線選單
     function initRouteDropdowns() {
         const select = document.getElementById('selectRoute');
         const currentVal = select.value;
         select.innerHTML = '<option value="">-- 請選擇已建立的路線 --</option>';
 
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= MAX_ROUTES; i++) {
             const r = routes[i];
             const opt = document.createElement('option');
             opt.value = i;
-            opt.textContent = r ? `路線 ${i}: ${r.name}` : `路線 ${i}: (未設定)`;
+            opt.textContent = r ? `路線/段 ${i}: ${r.name}` : `路線/段 ${i}: (未設定)`;
             if (!r) opt.disabled = true;
             select.appendChild(opt);
         }
-        if(currentVal) select.value = currentVal;
+        if (currentVal) select.value = currentVal;
     }
 
     function loadRouteToForm() {
@@ -663,21 +700,21 @@
             document.getElementById('basePacket').value = r.basePacket || 0;
             document.getElementById('baseTrackable').value = r.baseTrackable || 0;
 
-            for(let i=1; i<=10; i++) {
+            for (let i = 1; i <= 10; i++) {
                 document.getElementById(`rateC${i}`).value = (r.rates && r.rates[i]) !== undefined ? r.rates[i] : 10;
             }
         } else {
             resetRouteForm(false);
-            document.getElementById('routeName').value = `路線 ${slot}`;
+            document.getElementById('routeName').value = `路線/段 ${slot}`;
         }
     }
 
     function saveRoute() {
         const slot = document.getElementById('routeSlot').value;
-        const name = document.getElementById('routeName').value.trim() || `路線 ${slot}`;
+        const name = document.getElementById('routeName').value.trim() || `路線/段 ${slot}`;
 
         let ratesObj = {};
-        for(let i=1; i<=10; i++) {
+        for (let i = 1; i <= 10; i++) {
             ratesObj[i] = parseFloat(document.getElementById(`rateC${i}`).value) || 10;
         }
 
@@ -692,8 +729,9 @@
             rates: ratesObj
         };
 
-        localStorage.setItem('postal_routes_duck', JSON.stringify(routes));
-        alert(`路線 [${name}] 已成功儲存於位置 ${slot}！`);
+        localStorage.setItem('postal_routes_duck_25', JSON.stringify(routes));
+        alert(`路線/段 [${name}] 已成功儲存於位置 ${slot}！`);
+        initRouteSlotDropdown();
         initRouteDropdowns();
     }
 
@@ -707,7 +745,7 @@
         document.getElementById('basePacket').value = 0;
         document.getElementById('baseTrackable').value = 0;
 
-        for(let i=1; i<=10; i++) {
+        for (let i = 1; i <= 10; i++) {
             document.getElementById(`rateC${i}`).value = 10;
         }
     }
@@ -730,7 +768,6 @@
 
         const r = routes[routeSlot];
 
-        // 第 1 部份 (包含退件 ÷ 3)
         let actMachine = parseFloat(document.getElementById('actMachine').value) || 0;
         const isMinus500 = document.getElementById('minus500').checked;
         if (isMinus500) {
@@ -739,31 +776,22 @@
 
         const actHand = parseFloat(document.getElementById('actHand').value) || 0;
         const actThin = parseFloat(document.getElementById('actThin').value) || 0;
-        const actReturn = parseFloat(document.getElementById('actReturn').value) || 0;
-        
-        // 退件實際數量 ÷ 3
-        const returnConverted = actReturn / 3.0;
-
-        // 計算信件總量
-        const totalLetter = actMachine + actHand + actThin + returnConverted;
+        const totalLetter = actMachine + actHand + actThin;
         const part1 = (totalLetter - r.baseLetter) / (r.rateLetter || 1);
 
-        // 第 2 部份
         const actFlat = parseFloat(document.getElementById('actFlat').value) || 0;
         const part2 = (actFlat - r.baseFlat) / (r.rateFlat || 1);
 
-        // 第 3 部份
         const actPacket = parseFloat(document.getElementById('actPacket').value) || 0;
         const part3 = (actPacket - r.basePacket) * 2.0;
 
-        // 第 4 部份 (獨立計算：掛號郵件)
         const actTrackable = parseFloat(document.getElementById('actTrackable').value) || 0;
-        const part4 = (actTrackable - r.baseTrackable) * 2.5;
+        let part4 = (actTrackable - r.baseTrackable) * 2.5;
+        if (part4 < 0) part4 = 0;
 
-        // 第 5 部份
         let part5 = 0;
         let p5Details = [];
-        for(let i=1; i<=10; i++) {
+        for (let i = 1; i <= 10; i++) {
             const count = parseFloat(document.getElementById(`actC${i}`).value) || 0;
             const rate = (r.rates && r.rates[i]) || 10;
             if (count > 0) {
@@ -773,16 +801,13 @@
             }
         }
 
-        // 第 6 部份
         const part6 = parseFloat(document.getElementById('remarkMinutes').value) || 0;
 
-        // 不包含掛號郵件派遞時間 (1+2+3+5+6)
-        const partGroupA = part1 + part2 + part3 + part5 + part6;
+        let partGroupA = part1 + part2 + part3 + part5 + part6;
+        if (partGroupA < 0) partGroupA = 0;
 
-        // 最終派遞時間
         const totalOT = partGroupA + part4;
 
-        // 顯示結果
         document.getElementById('resultBox').style.display = 'block';
         document.getElementById('totalOTMin').textContent = `${totalOT.toFixed(1)} 分鐘`;
 
@@ -790,27 +815,25 @@
         const mins = Math.round(totalOT % 60);
         document.getElementById('totalOTHr').textContent = `(約 ${hrs} 小時 ${mins} 分鐘)`;
 
-        // 詳細明細
         document.getElementById('detailBreakdown').innerHTML = `
             <strong>各部份計算明細：</strong><br>
-            • 第 1 部份 (信件${isMinus500 ? ', 已扣500機料' : ''}${actReturn > 0 ? `, 含退件${actReturn}÷3=${returnConverted.toFixed(1)}件` : ''}): ${part1.toFixed(1)} 分鐘<br>
+            • 第 1 部份 (信件${isMinus500 ? ', 已扣500機料' : ''}): ${part1.toFixed(1)} 分鐘<br>
             • 第 2 部份 (扁平): ${part2.toFixed(1)} 分鐘<br>
             • 第 3 部份 (小郵包 @2分): ${part3.toFixed(1)} 分鐘<br>
             • 第 5 部份 (通函): ${part5.toFixed(1)} 分鐘 ${p5Details.length ? `[${p5Details.join(', ')}]` : ''}<br>
             • 第 6 部份 (Remark): ${part6.toFixed(1)} 分鐘<br>
             ------------------------------------<br>
-            <strong>不包含掛號郵件派遞時間 (1+2+3+5+6): ${partGroupA.toFixed(1)} 分鐘</strong><br><br>
-            • 掛號郵件派遞時間 (第 4 部份): ${part4.toFixed(1)} 分鐘<br>
+            <strong>小計 (1+2+3+5+6, 最少0): ${partGroupA.toFixed(1)} 分鐘</strong><br><br>
+            • 第 4 部份 (可追查, 最少0): ${part4.toFixed(1)} 分鐘<br>
             ------------------------------------<br>
-            <strong>最終派遞時間: ${totalOT.toFixed(1)} 分鐘</strong>
+            <strong>最終總加班時間: ${totalOT.toFixed(1)} 分鐘</strong>
         `;
 
-        // 建議數量調整
         let targets = [60, 90, 120];
         let targetLabels = ["1 小時 (60分鐘)", "1.5 小時 (90分鐘)", "2 小時 (120分鐘)"];
-        let recHTML = `<strong>💡 達到特定派遞時間的數量調整建議：</strong><br>`;
+        let recHTML = `<strong>💡 達到特定加班時間的數量調整建議：</strong><br>`;
         
-        for(let idx=0; idx<targets.length; idx++) {
+        for (let idx = 0; idx < targets.length; idx++) {
             let targetMin = targets[idx];
             let diff = targetMin - totalOT;
             let packetNeeded = diff / 2.0;
@@ -833,7 +856,7 @@
         let totalQty = 0;
         let totalTime = 0;
 
-        for(let i=0; i<10; i++) {
+        for (let i = 0; i < 10; i++) {
             let rate = parseFloat(rates[i].value) || 0;
             let qty = parseFloat(qtys[i].value) || 0;
             let timeVal = rate > 0 ? (qty / rate) : 0;
